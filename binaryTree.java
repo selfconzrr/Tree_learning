@@ -315,7 +315,7 @@ class BinaryTree {
 	}
 	
 }
-public class Tree {
+public class binaryTree {
 
 	public static void main(String[] args) {
 		
