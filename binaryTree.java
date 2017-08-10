@@ -309,7 +309,38 @@ class BinaryTree {
 		root.rightNode = buildTree(preOrder, start + length - i, inOrder, end, i);
 		return root;
 	}
-	
+	// 18、二叉树的镜像 递归实现
+	public void Mirror(BinaryTreeNode btn) {
+        BinaryTreeNode root = btn;
+        BinaryTreeNode temp = null;
+        if(root != null){
+            temp = root.leftNode;
+            root.leftNode = root.rightNode;
+            root.rightNode = temp;
+            Mirror(root.leftNode);
+	    Mirror(root.rightNode);
+         }
+        }
+	// 19、二叉树的镜像 非递归实现
+	public void Mirror1(BinaryTreeNode btn) {
+		BinaryTreeNode root = btn;
+        if(root == null)
+        	return;
+        Stack<BinaryTreeNode> sta = new Stack<>();
+        sta.push(root);
+        while(!sta.isEmpty()){
+        	BinaryTreeNode node = sta.pop();
+        	if(node.leftNode != null || node.rightNode != null){
+        		BinaryTreeNode temp = node.leftNode;
+        		node.leftNode = node.rightNode;
+        		node.rightNode = temp;
+        	}
+        	if(node.leftNode != null)
+        		sta.push(node.leftNode);
+        	if(node.rightNode != null)
+        		sta.push(node.rightNode);
+           }
+	}
 	public static void printNode(BinaryTreeNode btn) {
 		System.out.print(btn.data + " " );		
 	}
