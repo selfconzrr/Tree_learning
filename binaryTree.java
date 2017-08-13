@@ -182,7 +182,7 @@ class BinaryTree {
 	public int depthTree(BinaryTreeNode btn){
 		BinaryTreeNode root = btn;
 		if(root == null)
-			return -1;
+			return 0;
 		int leftDepth = depthTree(root.leftNode);// 计算该节点左孩子的高度
 		int rightDepth = depthTree(root.rightNode);// 计算该节点右孩子的高度
 		return Math.max(leftDepth, rightDepth) + 1;
