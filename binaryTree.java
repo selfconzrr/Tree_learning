@@ -342,22 +342,23 @@ class BinaryTree {
            }
 	}
 	// 20、非递归求树的深度(层次遍历的思想)
+	// 20、非递归求树的深度(层次遍历的思想)
 	public int TreeDepth1(BinaryTreeNode root) {
         //depth：当前节点所在的层数，count已经遍历了的节点数，nextCount下层的节点总数；
         //当count==nextCount的时候，代表本层的节点已经遍历完毕
         if(root == null)
             return 0;
-        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        Queue<BinaryTreeNode> queue = new LinkedList<>();
         int depth = 0;
         int count = 0,nextCount = 1;
         queue.add(root);
         while(queue.size() != 0){
-            TreeNode node = queue.poll();
+        	BinaryTreeNode node = queue.poll();
             count ++;
-            if(root.left != null)
-               queue.add(root.left);
-            if(root.right != null)
-                queue.add(root.right);
+            if(root.leftNode != null)
+               queue.add(root.leftNode);
+            if(root.rightNode != null)
+                queue.add(root.rightNode);
             if(count == nextCount){
                 nextCount = queue.size();
                 count = 0;
