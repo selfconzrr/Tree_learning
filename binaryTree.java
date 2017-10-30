@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 import java.util.Queue;
@@ -252,20 +253,22 @@ class BinaryTree {
 		return Math.max(leftHeight, rightHeight) + 1;
 	}
 
-	// 14、 非递归实现层序遍历
+	// 14、 非递归实现层序遍历（BFS）
+	// 对应题目：从上往下打印出二叉树的每个节点，同层节点从左至右打印
 	void levelOrder1(BinaryTreeNode btn) {
 		BinaryTreeNode root = btn;
 		ArrayDeque<BinaryTreeNode> queue = new ArrayDeque<BinaryTreeNode>();
 		if (root == null)
 			return;
-		queue.add(root);
+		//使用offer和poll优于add和remove之处在于它们返回值可以判断成功与否，而不抛出异常
+		queue.offer(root);
 		while (queue.isEmpty() != true) {
-			root = queue.remove();
+			root = queue.poll();
 			printNode(root);
 			if (root.leftNode != null)
-				queue.add(root.leftNode);
+				queue.offer(root.leftNode);
 			if (root.rightNode != null)
-				queue.add(root.rightNode);
+				queue.offer(root.rightNode);
 		}
 	}
 
@@ -462,10 +465,8 @@ class BinaryTree {
 
 	// 21、输入两棵二叉树A，B，判断B是不是A的子结构(思路一)
 	/*
-	 * 要查找树A中是否存在和树B结构一样的子树，我们可以分成两步：
-	 * Step1.在树A中找到和B的根结点的值一样的结点R；
-	 * Step2.判断树A中以R为根结点的子树是不是包含和树B一样的结构。
-	 * 很明显，这是一个递归的过程。
+	 * 要查找树A中是否存在和树B结构一样的子树，我们可以分成两步： Step1.在树A中找到和B的根结点的值一样的结点R；
+	 * Step2.判断树A中以R为根结点的子树是不是包含和树B一样的结构。 很明显，这是一个递归的过程。
 	 */
 	public static boolean HasSubtree(BinaryTreeNode root1, BinaryTreeNode root2) {
 		boolean result = false;
@@ -503,27 +504,70 @@ class BinaryTree {
 
 	// 21、输入两棵二叉树A，B，判断B是不是A的子结构(思路二)
 	/*
-	 * 在已经给定两颗二叉树的前提下，分别进行先序遍历得到两个序列,
-	 * 然后判断tree1的先序遍历序列是否包含tree2的先序遍历序列即可。
+	 * 在已经给定两颗二叉树的前提下，分别进行先序遍历得到两个序列, 然后判断tree1的先序遍历序列是否包含tree2的先序遍历序列即可。
 	 */
-	public static boolean doesBisAsubStructure(BinaryTreeNode root1, BinaryTreeNode root2){
-		if(root1==null||root2==null) 
+	public static boolean doesBisAsubStructure(BinaryTreeNode root1,
+			BinaryTreeNode root2) {
+		if (root1 == null || root2 == null)
 			return false;
-		StringBuilder str1=new StringBuilder();
-		StringBuilder str2=new StringBuilder();
-		preorder(root1,str1);
+		StringBuilder str1 = new StringBuilder();
+		StringBuilder str2 = new StringBuilder();
+		preorder(root1, str1);
 		preorder(root2, str2);
 		return str1.toString().contains(str2);
 	}
-	
+
 	private static void preorder(BinaryTreeNode root2, StringBuilder str) {
-		if(root2 != null){
+		if (root2 != null) {
 			str.append(root2.data);
 			preorder(root2.leftNode, str);
 			preorder(root2.rightNode, str);
 		}
 	}
+	
+	// 22、求二叉树中和为某一值的所有路径（DFS）
+	// 注意：路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。
+	private int sumForPath = 0;
+	ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+	ArrayList<Integer> temp_res = new ArrayList<Integer>();
+	public ArrayList<ArrayList<Integer>> FindPath(BinaryTreeNode root,int target) {
+		if(root == null)
+			return res;
+		temp_res.add(root.data);
+        sumForPath = sumForPath + root.data;
+		if (root.leftNode == null && root.rightNode == null && sumForPath == target){
+			res.add(new ArrayList<Integer>(temp_res));
+		}
+        if(root.leftNode != null)
+        	FindPath(root.leftNode, target);
+        if(root.rightNode != null)
+        	FindPath(root.rightNode, target);
+        //当是叶子节点的时候，上两句不会执行，下面这一句，将路径节点退出来，返回上一级
+        sumForPath -= root.data;
+        temp_res.remove(temp_res.size()-1);
+		return res;
+    }
+	
+	// 23、判断一颗二叉树是不是对称的。
+	// 注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的
+	public boolean isSymmetrical(BinaryTreeNode pRoot)
+    {
+		if (pRoot == null)
+			return true;
+		return judge(pRoot.leftNode,pRoot.rightNode);
+    }
+	
+	private boolean judge(BinaryTreeNode left, BinaryTreeNode right) {
+		if(left == null && right == null)
+            return true;
+        if(left == null || right == null)
+            return false;
+        if(left.data != right.data)
+            return false;
+        return judge(left.leftNode,right.rightNode) && judge(left.rightNode,right.leftNode);
+	}
 
+	// 24
 	public static void printNode(BinaryTreeNode btn) {
 		System.out.print(btn.data + " ");
 	}
@@ -534,7 +578,7 @@ public class Tree {
 
 	public static void main(String[] args) {
 
-		int[] arrayNode = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		int[] arrayNode = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16 };
 		BinaryTree bt = new BinaryTree(arrayNode);
 		System.out.println("递归中序遍历: ");
 		bt.inOrder(bt.rooNode);
@@ -562,6 +606,8 @@ public class Tree {
 		System.out.println("树的深度: " + bt.depthTree(bt.rooNode));
 		System.out.println("是否为平衡二叉树: " + bt.isBalanced(bt.rooNode));
 		System.out.println("叶子结点个数: " + bt.countLeafs(bt.rooNode));
+		System.out.println("从上往下从左往右打印二叉树：");
+//		bt.PrintFromTopToBottom(bt.rooNode);
 		// bt.clearTree(bt.rooNode);
 	}
 }
